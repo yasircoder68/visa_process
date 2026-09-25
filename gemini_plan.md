@@ -2,7 +2,7 @@
 
 Living execution and progress tracking plan maintained by Gemini for the MCA(SS) Cloud Computing Visa & FRRO Registration System.
 
-**Current Phase:** Phase 5 (External APIs Integration)
+**Current Phase:** Phase 6 (Full Orchestration & Officer Assignment)
 
 ---
 
@@ -13,7 +13,7 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 | **contracts** | — | Shared contract-first XSDs, JAXB classes | — | **Completed** (Phase 1) |
 | **registry-server** | `8080` | SOAP `registerService` / `findService`, in-memory map | In-memory registry map | **Completed** (Phase 2) |
 | **visa-server** | `8081` | SOAP VisaApplicationService, ETA issuing | `applications` | **Completed** (Phase 3) |
-| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Completed** (Phase 4 skeleton, 5–6 full) |
+| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Next** (Phase 6 full orchestration) |
 | **web-dashboard** | `3000` | Thymeleaf UI, Spring Security, SOAP client | `users` | Pending (Phase 7) |
 
 ---
@@ -74,9 +74,10 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 - [x] Startup hook registering `RegistrationService` with Registry Server.
 - [x] Verified full SOAP verification chain: APPROVED visa reaches `DOCS_VERIFIED`, unapproved visa returns fault, stopped visa-server returns clean SOAP fault.
 
-### [ ] Phase 5 — External APIs Integration
-- [ ] 5a: Nominatim Location API (`RestClient` address geocoding + district extraction + rate limiter).
-- [ ] 5b: Holiday Provider (Calendarific + local gazetted holiday JSON fallback + `WorkingDayService` for appointment scheduling).
+### [x] Phase 5 — External APIs Integration
+- [x] 5a: Nominatim Location API (`RestClient` address geocoding + district extraction + rate limiter + samples saved).
+- [x] 5b: Holiday Provider (Calendarific + local gazetted holiday JSON fallback + `WorkingDayService` for appointment scheduling).
+- [x] Unit test verified: given a known holiday on a Monday (Republic Day 2026-01-26), `nextWorkingDay(Friday 2026-01-23)` returns Tuesday 2026-01-27.
 
 ### [ ] Phase 6 — Full Orchestration & Officer Assignment
 - [ ] Atomic officer assignment (`UPDATE ... SET status='ASSIGNED' WHERE id=? AND status='AVAILABLE'`).

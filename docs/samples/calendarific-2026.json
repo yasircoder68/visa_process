@@ -1,0 +1,25 @@
+{
+  "meta": { "code": 200 },
+  "response": {
+    "holidays": [
+      {
+        "name": "Republic Day",
+        "description": "Republic Day in India",
+        "date": { "iso": "2026-01-26" },
+        "type": ["National holiday"]
+      },
+      {
+        "name": "Independence Day",
+        "description": "Independence Day in India",
+        "date": { "iso": "2026-08-15" },
+        "type": ["National holiday"]
+      },
+      {
+        "name": "Mahatma Gandhi Jayanti",
+        "description": "Mahatma Gandhi's Birthday",
+        "date": { "iso": "2026-10-02" },
+        "type": ["National holiday"]
+      }
+    ]
+  }
+}
