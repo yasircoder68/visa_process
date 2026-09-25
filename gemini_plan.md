@@ -2,7 +2,7 @@
 
 Living execution and progress tracking plan maintained by Gemini for the MCA(SS) Cloud Computing Visa & FRRO Registration System.
 
-**Current Phase:** Phase 3 (Visa Application Server)
+**Current Phase:** Phase 4 (Registration Server Skeleton)
 
 ---
 
@@ -12,8 +12,8 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 |---|---|---|---|---|
 | **contracts** | — | Shared contract-first XSDs, JAXB classes | — | **Completed** (Phase 1) |
 | **registry-server** | `8080` | SOAP `registerService` / `findService`, in-memory map | In-memory registry map | **Completed** (Phase 2) |
-| **visa-server** | `8081` | SOAP VisaApplicationService, ETA issuing | `applications` | **Next** (Phase 3) |
-| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | Pending (Phases 4–6) |
+| **visa-server** | `8081` | SOAP VisaApplicationService, ETA issuing | `applications` | **Completed** (Phase 3) |
+| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Next** (Phases 4–6) |
 | **web-dashboard** | `3000` | Thymeleaf UI, Spring Security, SOAP client | `users` | Pending (Phase 7) |
 
 ---
@@ -58,13 +58,13 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 - [x] Create test XMLs in `docs/soap-samples/` (`register.xml`, `find.xml`, `find-unknown.xml`).
 - [x] Verify: register service via curl → find service returns URL → unknown service returns SOAP fault.
 
-### [ ] Phase 3 — Visa Application Server (Port 8081)
-- [ ] JPA Entity `Application` mapping to `applications` table (`ddl-auto=validate`).
-- [ ] Shared `RegistryClient` (helper for registering and discovering endpoints).
-- [ ] `VisaEndpoint` implementing all 5 visa operations.
-- [ ] Startup hook: `ApplicationReadyEvent` registering `VisaApplicationService` with Registry Server (retry logic).
-- [ ] SOAP fault handling for invalid state transitions or unknown applications.
-- [ ] Verification with sample curl requests.
+### [x] Phase 3 — Visa Application Server (Port 8081)
+- [x] JPA Entity `Application` mapping to `applications` table (`ddl-auto=validate`).
+- [x] Shared `RegistryClient` (helper for registering and discovering endpoints).
+- [x] `VisaEndpoint` implementing all 5 visa operations.
+- [x] Startup hook: `ApplicationReadyEvent` registering `VisaApplicationService` with Registry Server (retry logic).
+- [x] SOAP fault handling for invalid state transitions or unknown applications.
+- [x] Verification with sample curl requests: submit → approve → issueETA, and registry discovery verified.
 
 ### [ ] Phase 4 — Registration Server Skeleton (Port 8082)
 - [ ] JPA Entities: `Registration`, `Officer`.

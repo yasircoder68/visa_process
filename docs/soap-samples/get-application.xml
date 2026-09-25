@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:visa="http://visareg.mca/visa">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <visa:getApplicationRequest>
+            <visa:applicationId>VISA001</visa:applicationId>
+        </visa:getApplicationRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

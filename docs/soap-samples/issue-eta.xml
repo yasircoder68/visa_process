@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:visa="http://visareg.mca/visa">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <visa:issueETARequest>
+            <visa:applicationId>VISA001</visa:applicationId>
+            <visa:validDays>180</visa:validDays>
+        </visa:issueETARequest>
+    </soapenv:Body>
+</soapenv:Envelope>

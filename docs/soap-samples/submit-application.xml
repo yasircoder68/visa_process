@@ -1,0 +1,12 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:visa="http://visareg.mca/visa">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <visa:submitApplicationRequest>
+            <visa:applicantName>John Doe</visa:applicantName>
+            <visa:passportNumber>P12345678</visa:passportNumber>
+            <visa:visaType>STUDENT</visa:visaType>
+            <visa:portOfArrival>Chennai</visa:portOfArrival>
+        </visa:submitApplicationRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
