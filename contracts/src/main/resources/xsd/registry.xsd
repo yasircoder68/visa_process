@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://visareg.mca/registry"
+           xmlns:tns="http://visareg.mca/registry"
+           elementFormDefault="qualified">
+
+    <!-- registerService -->
+    <xs:element name="registerServiceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceName" type="xs:string"/>
+                <xs:element name="endpointUrl" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="registerServiceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- findService -->
+    <xs:element name="findServiceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceName" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="findServiceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceName" type="xs:string"/>
+                <xs:element name="endpointUrl" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

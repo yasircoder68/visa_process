@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://visareg.mca/visa"
+           xmlns:tns="http://visareg.mca/visa"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="ApplicationInfo">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="applicantName" type="xs:string"/>
+            <xs:element name="passportNumber" type="xs:string"/>
+            <xs:element name="visaType" type="xs:string"/>
+            <xs:element name="portOfArrival" type="xs:string" minOccurs="0"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="etaNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="validUntil" type="xs:date" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- submitApplication -->
+    <xs:element name="submitApplicationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicantName" type="xs:string"/>
+                <xs:element name="passportNumber" type="xs:string"/>
+                <xs:element name="visaType" type="xs:string"/>
+                <xs:element name="portOfArrival" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="submitApplicationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicationId" type="xs:string"/>
+                <xs:element name="status" type="xs:string"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getApplication -->
+    <xs:element name="getApplicationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicationId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getApplicationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="application" type="tns:ApplicationInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- updateApplicationStatus -->
+    <xs:element name="updateApplicationStatusRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicationId" type="xs:string"/>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateApplicationStatusResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="application" type="tns:ApplicationInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- issueETA -->
+    <xs:element name="issueETARequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicationId" type="xs:string"/>
+                <xs:element name="validDays" type="xs:int" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="issueETAResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="application" type="tns:ApplicationInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- listApplications -->
+    <xs:element name="listApplicationsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="listApplicationsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applications" type="tns:ApplicationInfo" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

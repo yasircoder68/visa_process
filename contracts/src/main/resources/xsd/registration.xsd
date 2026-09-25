@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://visareg.mca/registration"
+           xmlns:tns="http://visareg.mca/registration"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="RegistrationInfo">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="applicationId" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="latitude" type="xs:double" minOccurs="0"/>
+            <xs:element name="longitude" type="xs:double" minOccurs="0"/>
+            <xs:element name="district" type="xs:string" minOccurs="0"/>
+            <xs:element name="appointmentDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="assignedOfficer" type="xs:string" minOccurs="0"/>
+            <xs:element name="officerName" type="xs:string" minOccurs="0"/>
+            <xs:element name="applicantName" type="xs:string" minOccurs="0"/>
+            <xs:element name="visaType" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- createRegistration -->
+    <xs:element name="createRegistrationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="applicationId" type="xs:string"/>
+                <xs:element name="address" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createRegistrationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registration" type="tns:RegistrationInfo"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- verifyDocuments -->
+    <xs:element name="verifyDocumentsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registrationId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="verifyDocumentsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registration" type="tns:RegistrationInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- scheduleAppointment -->
+    <xs:element name="scheduleAppointmentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registrationId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="scheduleAppointmentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registration" type="tns:RegistrationInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- completeRegistration -->
+    <xs:element name="completeRegistrationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registrationId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="completeRegistrationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registration" type="tns:RegistrationInfo"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- listRegistrations -->
+    <xs:element name="listRegistrationsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="officerId" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="listRegistrationsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="registrations" type="tns:RegistrationInfo" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
