@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:reg="http://visareg.mca/registry">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <reg:registerServiceRequest>
+            <reg:serviceName>VisaApplicationService</reg:serviceName>
+            <reg:endpointUrl>http://localhost:8081/ws</reg:endpointUrl>
+        </reg:registerServiceRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

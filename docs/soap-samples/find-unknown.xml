@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:reg="http://visareg.mca/registry">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <reg:findServiceRequest>
+            <reg:serviceName>UnknownService</reg:serviceName>
+        </reg:findServiceRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

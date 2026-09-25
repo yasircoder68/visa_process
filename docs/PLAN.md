@@ -3,7 +3,7 @@
 Place this file at `docs/PLAN.md`. `GEMINI.md` (repo root) points the Antigravity agent here.
 Tick boxes as you go so the agent always knows the current phase.
 
-**Current phase:** 2
+**Current phase:** 0
 
 ---
 
@@ -76,12 +76,12 @@ visa-registration/
 ## Phase 0 — Environment setup
 **Goal:** tools installed, empty repo opens cleanly in Antigravity.
 
-- [x] JDK 21 (`java -version`), Maven 3.9+ (`mvn -v`)
-- [x] MySQL 8 locally (or Docker `mysql:8`), create DB `visareg` and user `visareg`
-- [x] Git repo created with the layout above (empty folders are fine), `GEMINI.md` at root, this file in `docs/`
-- [x] Antigravity: open the repo root. If the agent doesn't seem to follow GEMINI.md, also copy it to
+- [ ] JDK 21 (`java -version`), Maven 3.9+ (`mvn -v`)
+- [ ] MySQL 8 locally (or Docker `mysql:8`), create DB `visareg` and user `visareg`
+- [ ] Git repo created with the layout above (empty folders are fine), `GEMINI.md` at root, this file in `docs/`
+- [ ] Antigravity: open the repo root. If the agent doesn't seem to follow GEMINI.md, also copy it to
       `.agents/rules/project.md` (newer Antigravity versions read workspace rules from there)
-- [x] Postman or SoapUI installed (optional; curl works too)
+- [ ] Postman or SoapUI installed (optional; curl works too)
 
 **Done when:** agent can summarise the project correctly from GEMINI.md without you explaining it.
 
@@ -92,12 +92,12 @@ visa-registration/
 XML namespaces; why every service shares one contracts jar.
 
 **Tasks**
-- [x] Parent `pom.xml`: `spring-boot-starter-parent` 3.x, `<java.version>21`, modules listed
-- [x] `contracts` module with `jaxb2-maven-plugin` (org.codehaus.mojo, 3.x, jakarta namespace)
+- [ ] Parent `pom.xml`: `spring-boot-starter-parent` 3.x, `<java.version>21`, modules listed
+- [ ] `contracts` module with `jaxb2-maven-plugin` (org.codehaus.mojo, 3.x, jakarta namespace)
   - One `<execution>` per XSD, each with its own `packageName`
     (`mca.visareg.contracts.registry|visa|registration`)
   - `clearOutputDir=false` on the 2nd and 3rd executions, or they wipe each other's output
-- [x] Write the three XSDs. Namespaces: `http://visareg.mca/registry`, `/visa`, `/registration`
+- [ ] Write the three XSDs. Namespaces: `http://visareg.mca/registry`, `/visa`, `/registration`
 
 | XSD | Request/response pairs |
 |---|---|
@@ -105,12 +105,12 @@ XML namespaces; why every service shares one contracts jar.
 | visa.xsd | submitApplication, getApplication, updateApplicationStatus, issueETA, listApplications |
 | registration.xsd | createRegistration, verifyDocuments, scheduleAppointment, completeRegistration, listRegistrations |
 
-- [x] Shared complex types: `ApplicationInfo` (all application columns), `RegistrationInfo`
+- [ ] Shared complex types: `ApplicationInfo` (all application columns), `RegistrationInfo`
       (all registration columns + officer name)
-- [x] `db/schema.sql`: report §9.5 plus D3 columns (`eta_number`, `valid_until`)
-- [x] `db/seed.sql`: one VISA_OFFICER (`VO01`) and 2–3 FRRO_OFFICERs. Leave `jurisdiction` as a
+- [ ] `db/schema.sql`: report §9.5 plus D3 columns (`eta_number`, `valid_until`)
+- [ ] `db/seed.sql`: one VISA_OFFICER (`VO01`) and 2–3 FRRO_OFFICERs. Leave `jurisdiction` as a
       placeholder until Phase 5 shows you Nominatim's real district string
-- [x] Run both SQL files into MySQL manually
+- [ ] Run both SQL files into MySQL manually
 
 **Done when:** `mvn clean install` generates classes under `contracts/target/generated-sources` and
 `SHOW TABLES;` lists 4 tables.
