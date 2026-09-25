@@ -2,7 +2,7 @@
 
 Living execution and progress tracking plan maintained by Gemini for the MCA(SS) Cloud Computing Visa & FRRO Registration System.
 
-**Current Phase:** Phase 4 (Registration Server Skeleton)
+**Current Phase:** Phase 5 (External APIs Integration)
 
 ---
 
@@ -13,7 +13,7 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 | **contracts** | — | Shared contract-first XSDs, JAXB classes | — | **Completed** (Phase 1) |
 | **registry-server** | `8080` | SOAP `registerService` / `findService`, in-memory map | In-memory registry map | **Completed** (Phase 2) |
 | **visa-server** | `8081` | SOAP VisaApplicationService, ETA issuing | `applications` | **Completed** (Phase 3) |
-| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Next** (Phases 4–6) |
+| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Completed** (Phase 4 skeleton, 5–6 full) |
 | **web-dashboard** | `3000` | Thymeleaf UI, Spring Security, SOAP client | `users` | Pending (Phase 7) |
 
 ---
@@ -66,10 +66,13 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 - [x] SOAP fault handling for invalid state transitions or unknown applications.
 - [x] Verification with sample curl requests: submit → approve → issueETA, and registry discovery verified.
 
-### [ ] Phase 4 — Registration Server Skeleton (Port 8082)
-- [ ] JPA Entities: `Registration`, `Officer`.
-- [ ] Dynamic SOAP client to query `VisaApplicationService` via Registry lookup.
-- [ ] Initial `RegistrationEndpoint` implementation with document verification.
+### [x] Phase 4 — Registration Server Skeleton (Port 8082)
+- [x] JPA Entities: `Registration`, `Officer`.
+- [x] Repositories: `RegistrationRepository`, `OfficerRepository` with atomic claim/release queries.
+- [x] Dynamic SOAP client `VisaClient` querying `VisaApplicationService` via Registry lookup.
+- [x] `RegistrationEndpoint` with `verifyDocuments` and `createRegistration` reaching `DOCS_VERIFIED`.
+- [x] Startup hook registering `RegistrationService` with Registry Server.
+- [x] Verified full SOAP verification chain: APPROVED visa reaches `DOCS_VERIFIED`, unapproved visa returns fault, stopped visa-server returns clean SOAP fault.
 
 ### [ ] Phase 5 — External APIs Integration
 - [ ] 5a: Nominatim Location API (`RestClient` address geocoding + district extraction + rate limiter).
