@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Visa Application & ETA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}" class="active">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="btn-login">Officer Login</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="max-width: 760px; margin: 0 auto 2rem auto;">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Track e-Visa / ETA Status</h2>
+                <p class="card-desc">Enter your Application Reference Number to view real-time status.</p>
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <form th:action="@{/track}" method="get" style="display: flex; gap: 0.75rem;">
+            <input type="text" name="id" class="form-control" placeholder="Enter Application ID (e.g. VISA001)"
+                   th:value="${searchId}" required autofocus style="flex: 1;">
+            <button type="submit" class="btn btn-primary">Check Status</button>
+        </form>
+    </div>
+
+    <!-- Application Details Card -->
+    <div th:if="${visaApp}" class="card" style="max-width: 760px; margin: 0 auto;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title" th:text="'Application #' + ${visaApp.id}">Application #VISA001</h3>
+                <p class="card-desc" th:text="'Applicant: ' + ${visaApp.applicantName}">Applicant: John Doe</p>
+            </div>
+            <div>
+                <span th:if="${visaApp.status == 'SUBMITTED'}" class="badge badge-submitted">SUBMITTED</span>
+                <span th:if="${visaApp.status == 'APPROVED'}" class="badge badge-approved">APPROVED</span>
+                <span th:if="${visaApp.status == 'REJECTED'}" class="badge badge-rejected">REJECTED</span>
+            </div>
+        </div>
+
+        <div class="details-grid">
+            <div class="details-item">
+                <div class="details-label">Passport Number</div>
+                <div class="details-value" th:text="${visaApp.passportNumber}">P12345678</div>
+            </div>
+            <div class="details-item">
+                <div class="details-label">Visa Type</div>
+                <div class="details-value" th:text="${visaApp.visaType}">STUDENT</div>
+            </div>
+            <div class="details-item">
+                <div class="details-label">Port of Arrival</div>
+                <div class="details-value" th:text="${visaApp.portOfArrival}">Chennai</div>
+            </div>
+            <div class="details-item">
+                <div class="details-label">Application Status</div>
+                <div class="details-value" th:text="${visaApp.status}">APPROVED</div>
+            </div>
+        </div>
+
+        <!-- Electronic Travel Authorization Section -->
+        <div th:if="${visaApp.status == 'APPROVED'}"
+             style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h4 style="color: var(--success); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>&#10003;</span> Electronic Travel Authorization (ETA) Issued
+                </h4>
+                <span class="badge badge-approved">Valid For Travel</span>
+            </div>
+            <div class="details-grid" style="margin: 0.5rem 0 1rem 0;">
+                <div class="details-item" style="background: #ffffff;">
+                    <div class="details-label">ETA Number</div>
+                    <div class="details-value" style="color: var(--success);" th:text="${visaApp.etaNumber}">ETA-VISA001</div>
+                </div>
+                <div class="details-item" style="background: #ffffff;">
+                    <div class="details-label">Valid Until</div>
+                    <div class="details-value" th:text="${visaApp.validUntil}">2027-03-24</div>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: #166534; margin-bottom: 1rem;">
+                You are authorized to enter India under the terms of your e-Visa. Upon arrival in India, proceed to complete post-arrival FRRO registration within 14 days.
+            </p>
+            <a th:href="@{/register(applicationId=${visaApp.id})}" class="btn btn-success">
+                Proceed to FRRO Post-Arrival Registration &rarr;
+            </a>
+        </div>
+
+        <div th:if="${visaApp.status == 'SUBMITTED'}"
+             style="background: #fefce8; border: 1px solid #fef08a; border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem;">
+            <p style="color: #854d0e; font-size: 0.95rem;">
+                <strong>Under Scrutiny:</strong> Your application is currently awaiting review by a Visa Scrutiny Officer. Please check back shortly.
+            </p>
+        </div>
+
+        <div th:if="${visaApp.status == 'REJECTED'}"
+             style="background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem;">
+            <p style="color: #991b1b; font-size: 0.95rem;">
+                <strong>Application Rejected:</strong> Your e-Visa application was not approved. Please consult the nearest Indian Embassy or Consulate for further queries.
+            </p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

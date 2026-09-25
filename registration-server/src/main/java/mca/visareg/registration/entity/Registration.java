@@ -33,7 +33,7 @@ public class Registration {
     @Column(name = "appointment_date")
     private LocalDate appointmentDate;
 
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false, length = 30)
     private String status;
 
     @Column(name = "assigned_officer", length = 20)

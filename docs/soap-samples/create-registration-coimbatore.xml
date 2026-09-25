@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:reg="http://visareg.mca/registration">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <reg:createRegistrationRequest>
+            <reg:applicationId>VISA001</reg:applicationId>
+            <reg:address>Gandhipuram, Coimbatore</reg:address>
+        </reg:createRegistrationRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

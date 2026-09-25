@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS registrations (
     longitude DOUBLE,
     district VARCHAR(80),
     appointment_date DATE,
-    status VARCHAR(20) NOT NULL DEFAULT 'SUBMITTED',
+    status VARCHAR(30) NOT NULL DEFAULT 'SUBMITTED',
     assigned_officer VARCHAR(20),
     FOREIGN KEY (application_id) REFERENCES applications(id),
     FOREIGN KEY (assigned_officer) REFERENCES officers(id)

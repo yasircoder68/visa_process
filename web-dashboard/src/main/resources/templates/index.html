@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian e-Visa & FRRO Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration &bull; FRRO Support</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}" class="active">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li sec:authorize="hasRole('VISA_OFFICER')">
+                <a th:href="@{/visa-officer}">Visa Officer Portal</a>
+            </li>
+            <li sec:authorize="hasRole('FRRO_OFFICER')">
+                <a th:href="@{/frro}">FRRO Officer Portal</a>
+            </li>
+            <li sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="btn-login">Officer Login</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+        <h1 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 2.2rem;">Welcome to the Indian e-Visa & FRRO Registration System</h1>
+        <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 800px; margin: 0 auto 2rem auto;">
+            A unified, service-oriented platform linking pre-arrival Electronic Travel Authorization (e-Visa)
+            with post-arrival Foreigners Regional Registration Office (FRRO) appointments and verification.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a th:href="@{/apply}" class="btn btn-primary">Apply for e-Visa</a>
+            <a th:href="@{/track}" class="btn btn-secondary">Track Application / ETA</a>
+            <a th:href="@{/register}" class="btn btn-success">FRRO Post-Arrival Registration</a>
+        </div>
+    </div>
+
+    <h2 style="color: var(--primary); margin-bottom: 1.25rem;">Citizen & Applicant Services</h2>
+    <div class="grid-3">
+        <div class="portal-box">
+            <div>
+                <h3>1. Apply for e-Visa</h3>
+                <p>Submit your electronic visa application prior to travel. Fast-track processing for Tourist, Business, Student, and Medical visas.</p>
+            </div>
+            <a th:href="@{/apply}" class="btn btn-primary">Start Application &rarr;</a>
+        </div>
+
+        <div class="portal-box">
+            <div>
+                <h3>2. Track Visa & ETA</h3>
+                <p>Check the real-time processing status of your submitted e-Visa application and retrieve your Electronic Travel Authorization (ETA).</p>
+            </div>
+            <a th:href="@{/track}" class="btn btn-secondary">Track Application &rarr;</a>
+        </div>
+
+        <div class="portal-box">
+            <div>
+                <h3>3. FRRO Registration</h3>
+                <p>Foreign nationals arriving in India must complete post-arrival FRRO registration within 14 days. Auto-district resolution & scheduling.</p>
+            </div>
+            <a th:href="@{/register}" class="btn btn-success">Register Post-Arrival &rarr;</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Authorized Official Portals</h3>
+            <span class="badge badge-submitted">Restricted Access</span>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+            Secured access for accredited Immigration Authorities, Visa Scrutiny Officers, and Foreigners Regional Registration Officers.
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a th:href="@{/visa-officer}" class="btn btn-primary">Visa Officer Dashboard</a>
+            <a th:href="@{/frro}" class="btn btn-secondary">FRRO Officer Dashboard</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India. MCA(SS) Cloud Computing Project.</p>
+</footer>
+</body>
+</html>

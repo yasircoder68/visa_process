@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:reg="http://visareg.mca/registration">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <reg:completeRegistrationRequest>
+            <reg:registrationId>REG002</reg:registrationId>
+        </reg:completeRegistrationRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

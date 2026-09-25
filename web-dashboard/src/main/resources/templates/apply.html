@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Indian e-Visa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}" class="active">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="btn-login">Officer Login</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="max-width: 720px; margin: 0 auto;">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Online e-Visa Application</h2>
+                <p class="card-desc">Please fill in applicant particulars accurately as per your official passport.</p>
+            </div>
+            <span class="badge badge-submitted">Form I-101</span>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <form th:action="@{/apply}" method="post">
+            <div class="form-group">
+                <label for="applicantName">Full Name (as per Passport)</label>
+                <input type="text" id="applicantName" name="applicantName" th:value="${applicantName}"
+                       class="form-control" placeholder="e.g. John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passportNumber">Passport Number</label>
+                <input type="text" id="passportNumber" name="passportNumber" th:value="${passportNumber}"
+                       class="form-control" placeholder="e.g. P98765432" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="visaType">e-Visa Type</label>
+                    <select id="visaType" name="visaType" class="form-control" required>
+                        <option value="TOURIST" th:selected="${visaType == 'TOURIST'}">e-Tourist Visa</option>
+                        <option value="BUSINESS" th:selected="${visaType == 'BUSINESS'}">e-Business Visa</option>
+                        <option value="STUDENT" th:selected="${visaType == 'STUDENT'}">e-Student Visa</option>
+                        <option value="MEDICAL" th:selected="${visaType == 'MEDICAL'}">e-Medical Visa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="portOfArrival">Expected Port of Arrival</label>
+                    <select id="portOfArrival" name="portOfArrival" class="form-control" required>
+                        <option value="Chennai" th:selected="${portOfArrival == 'Chennai'}">Chennai (MAA)</option>
+                        <option value="Coimbatore" th:selected="${portOfArrival == 'Coimbatore'}">Coimbatore (CJB)</option>
+                        <option value="Madurai" th:selected="${portOfArrival == 'Madurai'}">Madurai (IXM)</option>
+                        <option value="Bengaluru" th:selected="${portOfArrival == 'Bengaluru'}">Bengaluru (BLR)</option>
+                        <option value="Delhi" th:selected="${portOfArrival == 'Delhi'}">Delhi (DEL)</option>
+                        <option value="Mumbai" th:selected="${portOfArrival == 'Mumbai'}">Mumbai (BOM)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

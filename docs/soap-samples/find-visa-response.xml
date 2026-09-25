@@ -1,0 +1,1 @@
+﻿<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><ns2:findServiceResponse xmlns:ns2="http://visareg.mca/registry"><ns2:serviceName>VisaApplicationService</ns2:serviceName><ns2:endpointUrl>http://localhost:8081/ws</ns2:endpointUrl></ns2:findServiceResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>

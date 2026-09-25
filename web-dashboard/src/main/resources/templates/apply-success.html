@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Submitted — Indian e-Visa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}" class="active">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li><a th:href="@{/login}" class="btn-login">Officer Login</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="max-width: 680px; margin: 2rem auto; text-align: center;">
+        <div style="font-size: 3.5rem; color: var(--success); margin-bottom: 1rem;">&#10004;</div>
+        <h2 style="color: var(--primary); margin-bottom: 0.5rem;">Application Successfully Submitted</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;" th:text="${successMessage}">
+            Your application has been received and queued for scrutiny.
+        </p>
+
+        <div style="background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Your Application Reference Number
+            </div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-top: 0.25rem;" th:text="${applicationId}">
+                VISA001
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Please save this reference number to track your visa approval and Electronic Travel Authorization (ETA).
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a th:href="@{/track(id=${applicationId})}" class="btn btn-primary">Track This Application</a>
+            <a th:href="@{/}" class="btn btn-secondary">Return Home</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

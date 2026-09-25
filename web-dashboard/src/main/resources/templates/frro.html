@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRRO Officer Portal — Appointment Verification</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration &bull; Foreigners Regional Registration Office</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">FRRO Officer</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/frro}" class="active">My Appointments</a></li>
+            <li><a th:href="@{/frro/map}">View Map</a></li>
+            <li><span style="color: #cbd5e1; font-size: 0.9rem;" th:text="${officerUsername} + ' (' + ${officerId} + ')'">Officer (FRRO02)</span></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Assigned FRRO Registration Appointments</h2>
+                <p class="card-desc">
+                    Managing verification queue for Officer ID: <strong th:text="${officerId}">FRRO02</strong>.
+                </p>
+            </div>
+            <a th:href="@{/frro/map}" class="btn btn-map">
+                &#127757; View Jurisdiction Map
+            </a>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>Registration ID</th>
+                    <th>e-Visa ID</th>
+                    <th>Stay Address</th>
+                    <th>District</th>
+                    <th>Appointment Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reg : ${registrations}">
+                    <td><strong th:text="${reg.id}">REG002</strong></td>
+                    <td th:text="${reg.applicationId}">VISA001</td>
+                    <td th:text="${reg.address}">Gandhipuram, Coimbatore</td>
+                    <td th:text="${reg.district}">Coimbatore</td>
+                    <td th:text="${reg.appointmentDate}">2026-09-28</td>
+                    <td>
+                        <span th:if="${reg.status == 'SUBMITTED'}" class="badge badge-submitted">SUBMITTED</span>
+                        <span th:if="${reg.status == 'DOCS_VERIFIED'}" class="badge badge-docs_verified">DOCS_VERIFIED</span>
+                        <span th:if="${reg.status == 'APPOINTMENT_SCHEDULED'}" class="badge badge-appointment_scheduled">APPOINTMENT_SCHEDULED</span>
+                        <span th:if="${reg.status == 'REGISTERED'}" class="badge badge-registered">REGISTERED</span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <form th:if="${reg.status == 'APPOINTMENT_SCHEDULED'}"
+                                  th:action="@{/frro/verify}" method="post" style="display:inline;">
+                                <input type="hidden" name="registrationId" th:value="${reg.id}">
+                                <button type="submit" class="btn btn-sm btn-success" title="Verify documents & complete registration">
+                                    VERIFY
+                                </button>
+                            </form>
+                            <a th:if="${reg.latitude != null}"
+                               th:href="@{/frro/map(registrationId=${reg.id})}"
+                               class="btn btn-sm btn-map" title="View location on map">
+                                VIEW MAP
+                            </a>
+                            <span th:if="${reg.status == 'REGISTERED'}" style="color: var(--success); font-size: 0.85rem; font-weight: 600;">
+                                &#10003; Complete
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${registrations == null || registrations.isEmpty()}">
+                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        No registration appointments currently assigned to you.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

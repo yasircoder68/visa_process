@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurisdiction Map — FRRO Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration &bull; Geospatial FRRO Viewer</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">FRRO Map</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/frro}">My Appointments</a></li>
+            <li><a th:href="@{/frro/map}" class="active">View Map</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Applicant Geospatial Location Map</h2>
+                <p class="card-desc">
+                    Interactive view of registered applicant residences geocoded via OpenStreetMap Nominatim.
+                </p>
+            </div>
+            <a th:href="@{/frro}" class="btn btn-secondary btn-sm">&larr; Back to Appointments List</a>
+        </div>
+
+        <div id="map"></div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted);">
+            <div>
+                <span>Active Officer Jurisdiction: <strong th:text="${officerId}">FRRO02</strong></span>
+            </div>
+            <div>
+                Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var registrations = /*[[${registrations}]]*/ [];
+    var selectedReg = /*[[${selectedReg}]]*/ null;
+
+    // Default center (Tamil Nadu / South India or selected registration)
+    var defaultLat = 13.0827;
+    var defaultLon = 80.2707;
+    var defaultZoom = 7;
+
+    if (selectedReg && selectedReg.latitude && selectedReg.longitude) {
+        defaultLat = selectedReg.latitude;
+        defaultLon = selectedReg.longitude;
+        defaultZoom = 13;
+    } else if (registrations && registrations.length > 0) {
+        for (var i = 0; i < registrations.length; i++) {
+            if (registrations[i].latitude && registrations[i].longitude) {
+                defaultLat = registrations[i].latitude;
+                defaultLon = registrations[i].longitude;
+                defaultZoom = 10;
+                break;
+            }
+        }
+    }
+
+    var map = L.map('map').setView([defaultLat, defaultLon], defaultZoom);
+
+    // Add OpenStreetMap tiles with attribution
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Plot applicant markers
+    if (registrations && registrations.length > 0) {
+        registrations.forEach(function(r) {
+            if (r.latitude && r.longitude) {
+                var marker = L.marker([r.latitude, r.longitude]).addTo(map);
+
+                var popupContent = '<div style="font-family: inherit; font-size: 0.9rem; min-width: 180px;">' +
+                    '<strong style="color: #1b365d; font-size: 1rem;">' + r.id + '</strong>' +
+                    '<br><span style="color: #64748b; font-size: 0.8rem;">Visa: ' + r.applicationId + '</span>' +
+                    '<br><strong>Address:</strong> ' + r.address +
+                    '<br><strong>District:</strong> ' + (r.district || 'N/A') +
+                    '<br><strong>Status:</strong> <span style="font-weight:bold; color:' + (r.status === 'REGISTERED' ? '#16a34a' : '#6b21a8') + '">' + r.status + '</span>' +
+                    (r.appointmentDate ? '<br><strong>Date:</strong> ' + r.appointmentDate : '') +
+                    '</div>';
+
+                marker.bindPopup(popupContent);
+
+                if (selectedReg && selectedReg.id === r.id) {
+                    marker.openPopup();
+                }
+            }
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

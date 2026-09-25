@@ -2,7 +2,7 @@
 
 Living execution and progress tracking plan maintained by Gemini for the MCA(SS) Cloud Computing Visa & FRRO Registration System.
 
-**Current Phase:** Phase 6 (Full Orchestration & Officer Assignment)
+**Current Phase:** Phase 9 — Azure VM Deployment
 
 ---
 
@@ -13,8 +13,8 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 | **contracts** | — | Shared contract-first XSDs, JAXB classes | — | **Completed** (Phase 1) |
 | **registry-server** | `8080` | SOAP `registerService` / `findService`, in-memory map | In-memory registry map | **Completed** (Phase 2) |
 | **visa-server** | `8081` | SOAP VisaApplicationService, ETA issuing | `applications` | **Completed** (Phase 3) |
-| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Next** (Phase 6 full orchestration) |
-| **web-dashboard** | `3000` | Thymeleaf UI, Spring Security, SOAP client | `users` | Pending (Phase 7) |
+| **registration-server** | `8082` | SOAP RegistrationService, Nominatim REST, Holiday API, Officer assignment | `registrations`, `officers` | **Completed** (Phase 6) |
+| **web-dashboard** | `3000` | Thymeleaf UI, Spring Security, SOAP client | `users` | **Completed** (Phase 7) |
 
 ---
 
@@ -79,22 +79,30 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 - [x] 5b: Holiday Provider (Calendarific + local gazetted holiday JSON fallback + `WorkingDayService` for appointment scheduling).
 - [x] Unit test verified: given a known holiday on a Monday (Republic Day 2026-01-26), `nextWorkingDay(Friday 2026-01-23)` returns Tuesday 2026-01-27.
 
-### [ ] Phase 6 — Full Orchestration & Officer Assignment
-- [ ] Atomic officer assignment (`UPDATE ... SET status='ASSIGNED' WHERE id=? AND status='AVAILABLE'`).
-- [ ] `createRegistration` orchestration chain: Nominatim → Visa verification SOAP → appointment date calculation → officer claiming.
-- [ ] `completeRegistration` transition to `REGISTERED` and freeing officer back to `AVAILABLE`.
+### [x] Phase 6 — Full Orchestration & Officer Assignment
+- [x] Atomic officer assignment (`UPDATE ... SET status='ASSIGNED' WHERE id=? AND status='AVAILABLE'`).
+- [x] `createRegistration` orchestration chain: Nominatim → Visa verification SOAP → appointment date calculation → officer claiming.
+- [x] `completeRegistration` transition to `REGISTERED` and freeing officer back to `AVAILABLE`.
 
-### [ ] Phase 7 — Web Dashboard (Port 3000)
-- [ ] Spring Security login for Visa Officers and FRRO Officers (BCrypt authentication against `users` table).
-- [ ] Thymeleaf UI:
+### [x] Phase 7 — Web Dashboard (Port 3000)
+- [x] Spring Security login for Visa Officers and FRRO Officers (BCrypt authentication against `users` table).
+- [x] Thymeleaf UI:
   - `/apply`: Submit e-Visa.
   - `/track`: View visa status and ETA.
   - `/register`: Submit post-arrival registration.
   - `/visa-officer`: Review, approve, reject applications and issue ETA.
   - `/frro`: View assigned appointments, verify documents, Leaflet OpenStreetMap view.
 
-### [ ] Phase 8 — End-to-End Testing (Report §14 Scenario)
-- [ ] Local simulation of full workflow from e-Visa submission to FRRO verification.
+### [x] Phase 8 — End-to-End Testing (Report §14 Scenario)
+- [x] Fresh DB initialization (re-run schema + seed).
+- [x] Executed Report §14 scenario: STUDENT visa, port of arrival Chennai, applicant "Mohamed Yasir A".
+- [x] Visa Officer login (`visaofficer01`), application review, approval, and ETA issuance (`ETA-VISA001`).
+- [x] Applicant tracking verification: status updated to `APPROVED` with valid until date.
+- [x] Post-arrival registration at "T Nagar, Chennai": Nominatim district resolution, holiday/weekend skipping, officer assignment (`FRRO01`).
+- [x] FRRO Officer login (`frroofficer01`), roster view, Leaflet OpenStreetMap view, and verification.
+- [x] Document verification completes registration: status `REGISTERED` and officer returned to `AVAILABLE`.
+- [x] Negative tests verified: unapproved application rejected, unresolvable address rejected, officer exhaustion SOAP fault, stopped visa server clean SOAP fault.
+- [x] Captured 18 UI/WSDL/error screenshots in `docs/screenshots/` and raw SOAP samples in `docs/soap-samples/`.
 
 ### [ ] Phase 9 — Azure VM Deployment
 - [ ] Ubuntu Linux Azure VM deployment, systemd service units, and environment configuration.

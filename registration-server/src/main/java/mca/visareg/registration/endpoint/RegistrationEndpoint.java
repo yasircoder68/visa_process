@@ -45,7 +45,7 @@ public class RegistrationEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "scheduleAppointmentRequest")
     @ResponsePayload
     public ScheduleAppointmentResponse scheduleAppointment(@RequestPayload ScheduleAppointmentRequest request) {
-        Registration reg = registrationService.getRegistration(request.getRegistrationId());
+        Registration reg = registrationService.scheduleAppointment(request.getRegistrationId());
 
         ScheduleAppointmentResponse response = new ScheduleAppointmentResponse();
         response.setRegistration(registrationService.toDto(reg));
@@ -55,7 +55,7 @@ public class RegistrationEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "completeRegistrationRequest")
     @ResponsePayload
     public CompleteRegistrationResponse completeRegistration(@RequestPayload CompleteRegistrationRequest request) {
-        Registration reg = registrationService.getRegistration(request.getRegistrationId());
+        Registration reg = registrationService.completeRegistration(request.getRegistrationId());
 
         CompleteRegistrationResponse response = new CompleteRegistrationResponse();
         response.setRegistration(registrationService.toDto(reg));

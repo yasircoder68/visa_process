@@ -14,11 +14,11 @@ public interface OfficerRepository extends JpaRepository<Officer, String> {
 
     List<Officer> findByJurisdictionAndTypeAndStatus(String jurisdiction, String type, String status);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Officer o SET o.status = 'ASSIGNED' WHERE o.id = :id AND o.status = 'AVAILABLE'")
     int claimOfficer(@Param("id") String id);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Officer o SET o.status = 'AVAILABLE' WHERE o.id = :id")
     int releaseOfficer(@Param("id") String id);
 }

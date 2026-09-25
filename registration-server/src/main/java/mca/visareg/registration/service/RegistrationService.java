@@ -3,12 +3,16 @@ package mca.visareg.registration.service;
 import mca.visareg.contracts.registration.RegistrationInfo;
 import mca.visareg.contracts.visa.ApplicationInfo;
 import mca.visareg.registration.client.VisaClient;
-import mca.visareg.registration.entity.Officer;
 import mca.visareg.registration.entity.Registration;
 import mca.visareg.registration.entity.RegistrationStatus;
 import mca.visareg.registration.exception.RegistrationBusinessException;
+import mca.visareg.registration.geocoding.GeocodingResult;
+import mca.visareg.registration.geocoding.GeocodingService;
+import mca.visareg.registration.holiday.WorkingDayService;
 import mca.visareg.registration.repository.OfficerRepository;
 import mca.visareg.registration.repository.RegistrationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,26 +23,41 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RegistrationService {
 
+    private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
     private static final ZoneId KOLKATA_ZONE = ZoneId.of("Asia/Kolkata");
 
     private final RegistrationRepository registrationRepository;
     private final OfficerRepository officerRepository;
     private final VisaClient visaClient;
+    private final GeocodingService geocodingService;
+    private final WorkingDayService workingDayService;
+    private final RegistrationTxService registrationTxService;
 
     public RegistrationService(RegistrationRepository registrationRepository,
                                OfficerRepository officerRepository,
-                               VisaClient visaClient) {
+                               VisaClient visaClient,
+                               GeocodingService geocodingService,
+                               WorkingDayService workingDayService,
+                               RegistrationTxService registrationTxService) {
         this.registrationRepository = registrationRepository;
         this.officerRepository = officerRepository;
         this.visaClient = visaClient;
+        this.geocodingService = geocodingService;
+        this.workingDayService = workingDayService;
+        this.registrationTxService = registrationTxService;
     }
 
-    @Transactional
+    /**
+     * Full orchestration sequence for createRegistration:
+     * 1. Geocode address via Nominatim REST (outside transaction)
+     * 2. Verify visa application via SOAP (outside transaction)
+     * 3. Compute next working day appointment date (outside transaction)
+     * 4. In @Transactional (via RegistrationTxService): claim AVAILABLE FRRO officer in district -> schedule appointment
+     */
     public Registration createRegistration(String applicationId, String address) {
         if (applicationId == null || applicationId.trim().isEmpty()) {
             throw new RegistrationBusinessException("Application ID is required");
@@ -47,30 +66,51 @@ public class RegistrationService {
             throw new RegistrationBusinessException("Address is required");
         }
 
-        // 1. Verify Visa status and validity via SOAP before saving
+        // 1. Geocode address (REST) — outside transaction
+        GeocodingResult geo = geocodingService.resolve(address.trim());
+        String district = geo.district();
+
+        // 2. Verify visa (SOAP) — outside transaction
         ApplicationInfo visaApp = visaClient.getApplication(applicationId.trim());
         validateVisaApplication(visaApp);
 
-        // 2. Generate Registration ID
-        String nextId = generateNextId();
+        // 3. Compute appointment date (skipping weekends & holidays)
+        LocalDate appointmentDate = workingDayService.nextWorkingDay(LocalDate.now(KOLKATA_ZONE));
 
-        // 3. For Phase 4, use placeholder district until Nominatim integration in Phase 5
-        String district = "Chennai";
-
-        Registration reg = new Registration(nextId, applicationId.trim(), address.trim(), district, RegistrationStatus.DOCS_VERIFIED.name());
-        return registrationRepository.save(reg);
+        // 4. In Transaction: claim officer and persist registration
+        return registrationTxService.persistRegistrationWithOfficer(applicationId.trim(), address.trim(), geo, appointmentDate, district);
     }
 
-    @Transactional
     public Registration verifyDocuments(String registrationId) {
-        Registration reg = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new RegistrationBusinessException("Registration not found: " + registrationId));
+        Registration reg = getRegistration(registrationId);
 
         ApplicationInfo visaApp = visaClient.getApplication(reg.getApplicationId());
         validateVisaApplication(visaApp);
 
         reg.setStatus(RegistrationStatus.DOCS_VERIFIED.name());
-        return registrationRepository.save(reg);
+        return registrationTxService.saveRegistration(reg);
+    }
+
+    public Registration scheduleAppointment(String registrationId) {
+        Registration reg = getRegistration(registrationId);
+
+        if (!RegistrationStatus.DOCS_VERIFIED.name().equals(reg.getStatus())
+                && !RegistrationStatus.SUBMITTED.name().equals(reg.getStatus())) {
+            throw new RegistrationBusinessException("Cannot schedule appointment for registration in status: " + reg.getStatus());
+        }
+
+        LocalDate appointmentDate = workingDayService.nextWorkingDay(LocalDate.now(KOLKATA_ZONE));
+        return registrationTxService.scheduleAppointment(reg, appointmentDate);
+    }
+
+    public Registration completeRegistration(String registrationId) {
+        Registration reg = getRegistration(registrationId);
+
+        if (!RegistrationStatus.APPOINTMENT_SCHEDULED.name().equals(reg.getStatus())) {
+            throw new RegistrationBusinessException("Cannot complete registration with status: " + reg.getStatus() + ". Must be APPOINTMENT_SCHEDULED.");
+        }
+
+        return registrationTxService.completeRegistration(reg);
     }
 
     @Transactional(readOnly = true)
@@ -147,22 +187,5 @@ public class RegistrationService {
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Error converting date", e);
         }
-    }
-
-    private String generateNextId() {
-        Optional<Registration> top = registrationRepository.findTopByOrderByIdDesc();
-        if (top.isEmpty()) {
-            return "REG001";
-        }
-        String lastId = top.get().getId();
-        if (lastId != null && lastId.startsWith("REG")) {
-            try {
-                int num = Integer.parseInt(lastId.substring(3));
-                return String.format("REG%03d", num + 1);
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        long count = registrationRepository.count();
-        return String.format("REG%03d", count + 1);
     }
 }

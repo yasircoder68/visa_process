@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Login — Indian Visa & FRRO Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li><a th:href="@{/login}" class="active btn-login">Officer Login</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div style="max-width: 480px; margin: 2rem auto;">
+        <div class="card">
+            <div class="card-header" style="text-align: center; display: block;">
+                <h2 class="card-title">Official Sign In</h2>
+                <p class="card-desc">Accredited Visa and FRRO Officers</p>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username / Service ID</label>
+                    <input type="text" id="username" name="username" class="form-control" required autofocus placeholder="e.g. visaofficer01">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="Enter password">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In</button>
+            </form>
+
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
+                <p><strong>Demo Test Accounts:</strong></p>
+                <ul style="margin: 0.5rem 0 0 1.25rem;">
+                    <li><strong>Visa Officer:</strong> <code>visaofficer01</code> / <code>password123</code> (VO01)</li>
+                    <li><strong>FRRO Officer (Chennai):</strong> <code>frroofficer02</code> / <code>password123</code> (FRRO02)</li>
+                    <li><strong>FRRO Officer (Coimbatore):</strong> <code>frroofficer03</code> / <code>password123</code> (FRRO03)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

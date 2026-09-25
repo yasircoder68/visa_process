@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Arrival FRRO Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration &bull; Foreigners Regional Registration Office</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}" class="active">FRRO Registration</a></li>
+            <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="btn-login">Officer Login</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="max-width: 720px; margin: 0 auto;">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Post-Arrival FRRO Registration</h2>
+                <p class="card-desc">Mandatory registration within 14 days of arrival for valid e-Visa holders.</p>
+            </div>
+            <span class="badge badge-submitted">Form FRRO-1</span>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="alert alert-info">
+            <strong>Automated Orchestration:</strong> Your stay address is geocoded using OpenStreetMap Nominatim to identify your administrative district. Your appointment date is dynamically scheduled for the next working day, automatically taking into account gazetted Indian public holidays and weekends.
+        </div>
+
+        <form th:action="@{/register}" method="post">
+            <div class="form-group">
+                <label for="applicationId">Approved e-Visa Application ID</label>
+                <input type="text" id="applicationId" name="applicationId" th:value="${applicationId}"
+                       class="form-control" placeholder="e.g. VISA001" required>
+                <small style="color: var(--text-muted); font-size: 0.8rem;">
+                    Must reference an APPROVED e-Visa that has not expired.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Stay Address in India</label>
+                <input type="text" id="address" name="address" th:value="${address}"
+                       class="form-control" placeholder="e.g. T Nagar, Chennai or Gandhipuram, Coimbatore" required>
+                <small style="color: var(--text-muted); font-size: 0.8rem;">
+                    Enter city, locality, and district for accurate jurisdictional routing.
+                </small>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-success">Submit FRRO Registration</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

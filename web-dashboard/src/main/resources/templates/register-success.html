@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Scheduled — FRRO Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration &bull; FRRO Support</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}" class="active">FRRO Registration</a></li>
+            <li><a th:href="@{/login}" class="btn-login">Officer Login</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="card" style="max-width: 760px; margin: 2rem auto;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="font-size: 3.5rem; color: var(--success); margin-bottom: 0.5rem;">&#10004;</div>
+            <h2 style="color: var(--primary);">FRRO Appointment Successfully Scheduled</h2>
+            <p style="color: var(--text-muted);" th:text="${successMessage}">
+                Registration created and verified successfully.
+            </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Registration ID</span>
+                    <h3 style="color: var(--primary); font-size: 1.8rem;" th:text="${registration.id}">REG002</h3>
+                </div>
+                <span class="badge badge-appointment_scheduled" th:text="${registration.status}">APPOINTMENT_SCHEDULED</span>
+            </div>
+
+            <div class="details-grid">
+                <div class="details-item">
+                    <div class="details-label">Linked e-Visa ID</div>
+                    <div class="details-value" th:text="${registration.applicationId}">VISA001</div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Administrative District</div>
+                    <div class="details-value" th:text="${registration.district}">Coimbatore</div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Appointment Date</div>
+                    <div class="details-value" style="color: var(--primary);" th:text="${registration.appointmentDate}">2026-09-28</div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Assigned FRRO Officer</div>
+                    <div class="details-value" th:text="${registration.officerName != null ? registration.officerName + ' (' + registration.assignedOfficer + ')' : registration.assignedOfficer}">
+                        Officer Suresh (FRRO03)
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 1rem; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius);">
+                <div class="details-label">Registered Stay Address</div>
+                <div style="font-size: 1rem; font-weight: 500; margin-top: 0.25rem;" th:text="${registration.address}">
+                    Gandhipuram, Coimbatore
+                </div>
+                <div th:if="${registration.latitude != null}" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    Coordinates: <span th:text="${registration.latitude}">11.0182</span>, <span th:text="${registration.longitude}">76.9677</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 1rem 1.25rem; font-size: 0.9rem; color: #166534; margin-bottom: 1.5rem;">
+            <strong>Next Steps:</strong> Please present yourself at the designated Foreigners Regional Registration Office on your appointment date with your original passport and proof of stay.
+        </div>
+
+        <div style="text-align: center;">
+            <a th:href="@{/}" class="btn btn-primary">Return to Home Portal</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>
