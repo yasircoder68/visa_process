@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Restricted (403) — Indian Visa & FRRO Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <span>Government of India &bull; Ministry of Home Affairs</span>
+        <span>Bureau of Immigration</span>
+    </div>
+    <div class="navbar">
+        <a th:href="@{/}" class="brand">
+            <span>INDIAN VISA & FRRO PORTAL</span>
+            <span class="brand-badge">MCA Cloud</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/apply}">Apply e-Visa</a></li>
+            <li><a th:href="@{/track}">Track Status</a></li>
+            <li><a th:href="@{/register}">FRRO Registration</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div style="max-width: 580px; margin: 3rem auto;">
+        <div class="card" style="border-top: 4px solid var(--danger);">
+            <div class="card-header" style="text-align: center; display: block;">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">&#128274;</div>
+                <h2 class="card-title" style="color: var(--danger);">Access Restricted (403 Forbidden)</h2>
+                <p class="card-desc">Jurisdiction & Role-Based Access Control</p>
+            </div>
+
+            <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+                <p style="margin: 0;">
+                    You are currently logged in as <strong th:text="${username ?: 'an authorized officer'}">user</strong>.
+                    Your account does not have permission to view this specific officer queue.
+                </p>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: var(--text-color);">Portal Role Requirements:</p>
+                <ul style="margin: 0; padding-left: 1.25rem; color: var(--text-muted); line-height: 1.6;">
+                    <li><strong>FRRO Officer Portal (<code>/frro</code>):</strong> Requires FRRO Officer credentials (<code>frroofficer01</code> / <code>password123</code>).</li>
+                    <li><strong>Visa Officer Portal (<code>/visa-officer</code>):</strong> Requires Visa Officer credentials (<code>visaofficer01</code> / <code>password123</code>).</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-primary">
+                        Logout & Switch Officer Account
+                    </button>
+                </form>
+
+                <a th:if="${isVisaOfficer}" th:href="@{/visa-officer}" class="btn btn-secondary">
+                    Return to Visa Officer Portal
+                </a>
+
+                <a th:href="@{/}" class="btn btn-secondary">
+                    Home
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Bureau of Immigration, Ministry of Home Affairs, Government of India.</p>
+</footer>
+</body>
+</html>

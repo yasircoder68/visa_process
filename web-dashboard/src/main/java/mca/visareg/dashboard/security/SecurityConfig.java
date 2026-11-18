@@ -29,6 +29,7 @@ public class SecurityConfig {
                                 "/track",
                                 "/register",
                                 "/login",
+                                "/access-denied",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
@@ -37,6 +38,9 @@ public class SecurityConfig {
                         .requestMatchers("/visa-officer/**").hasRole("VISA_OFFICER")
                         .requestMatchers("/frro/**").hasRole("FRRO_OFFICER")
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/access-denied")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
