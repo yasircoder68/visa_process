@@ -1,0 +1,15 @@
+[Unit]
+Description=Visa Registration - Service Registry Server (Port 8080)
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+User=azureuser
+WorkingDirectory=/opt/visareg
+EnvironmentFile=/opt/visareg/env
+ExecStart=/usr/bin/java -Xms64m -Xmx256m -XX:+UseSerialGC -jar /opt/visareg/registry-server.jar
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

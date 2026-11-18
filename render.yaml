@@ -1,0 +1,25 @@
+# ====================================================================
+# Render Blueprint — Visa Registration System (Option A: All-In-One Container)
+# ====================================================================
+
+services:
+  - type: web
+    name: visa-registration-system
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_NAME
+        value: visareg
+      - key: DB_USERNAME
+        value: visareg
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: NOMINATIM_EMAIL
+        value: visareg-student@example.com
+      - key: VISA_OFFICER_PASSWORD
+        value: password123
+      - key: FRRO_OFFICER_PASSWORD
+        value: password123

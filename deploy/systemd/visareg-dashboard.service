@@ -1,0 +1,15 @@
+[Unit]
+Description=Visa Registration - Web Dashboard (Port 3000)
+After=network.target mysql.service visareg-registry.service visareg-visa.service visareg-registration.service
+Wants=visareg-registry.service visareg-registration.service
+
+[Service]
+User=azureuser
+WorkingDirectory=/opt/visareg
+EnvironmentFile=/opt/visareg/env
+ExecStart=/usr/bin/java -Xms64m -Xmx256m -XX:+UseSerialGC -jar /opt/visareg/web-dashboard.jar
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
