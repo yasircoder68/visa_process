@@ -104,17 +104,15 @@ Living execution and progress tracking plan maintained by Gemini for the MCA(SS)
 - [x] Negative tests verified: unapproved application rejected, unresolvable address rejected, officer exhaustion SOAP fault, stopped visa server clean SOAP fault.
 - [x] Captured 18 UI/WSDL/error screenshots in `docs/screenshots/` and raw SOAP samples in `docs/soap-samples/`.
 
-### [x] Phase 9 — Azure VM Deployment
-- [x] Ubuntu Linux Azure VM deployment preparation and NSG rule documentation.
-- [x] Systemd service units created with serial GC and 256MB heap cap in `deploy/systemd/`:
-  - `visareg-registry.service` (Port 8080)
-  - `visareg-visa.service` (Port 8081)
-  - `visareg-registration.service` (Port 8082)
-  - `visareg-dashboard.service` (Port 3000)
-- [x] Environment variable template `deploy/env.template` with strict `chmod 600` support.
-- [x] Automated provisioning bash script `deploy/setup-vm.sh` for Ubuntu 24.04/22.04.
-- [x] Pre-packaged and staged all 4 production fat JARs in `deploy/jars/`.
-- [x] Complete step-by-step deployment and verification guide in `deploy/README.md`.
+### [x] Phase 9 — Cloud Deployment (Render & Azure VM Blueprints)
+- [x] Ubuntu Linux Azure VM deployment preparation, automated setup script, and systemd service units.
+- [x] Render Deployment (Option A: 512MB RAM Optimized All-in-One Multi-Service Architecture):
+  - Created `all-in-one` unified launcher orchestrating Registry (8080), Visa (8081), Registration (8082), and Dashboard (10000) within a single JVM under ~370 MB total memory (including MySQL 8).
+  - Maintained strict SOAP-only network boundaries across all microservices and table isolation.
+  - Added resilient gazetteer fallback to `GeocodingService` for cloud hosting egress IPs blocked by OpenStreetMap Nominatim.
+  - Deployed to Render Web Service (`srv-dbufps0m7kps73c9ddr0`) via Render CLI.
+  - Live Public URL: `https://visa-registration-system.onrender.com`
+  - Fully verified live with complete Report §14 positive flow (e-Visa submission → approval + ETA → FRRO registration → officer assignment → document verification → REGISTERED) and negative tests.
 
 ### [ ] Phase 10 — Final Polish & Report Alignment
 - [ ] Update report references and document final setup.
