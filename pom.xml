@@ -33,6 +33,7 @@
         <module>visa-server</module>
         <module>registration-server</module>
         <module>web-dashboard</module>
+        <module>all-in-one</module>
     </modules>
 
     <dependencyManagement>
