@@ -147,32 +147,89 @@ docker rm visa-container
 
 ---
 
-## 5. Render CLI Management Commands
+## 5. Render Online Server Commands (Start, Stop, Restart, Status)
 
 Render CLI executable location:
 `C:\Users\user0\Documents\cloud_project\render_cli\render.exe`
 
 Service ID: `srv-dbufps0m7kps73c9ddr0`
 
-### 5.1 Check Service Status & Deployment History
+### 5.1 Online Server START (Resume Service)
+Resumes the suspended server so it accepts public web traffic.
+
+**Option A — Via Helper Script:**
 ```powershell
-& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" deploys list srv-dbufps0m7kps73c9ddr0
+powershell -ExecutionPolicy Bypass -File scripts/render_start.ps1
 ```
 
-### 5.2 Stream Live Server Logs
+**Option B — Direct PowerShell Command:**
+```powershell
+$token = (Get-Content "$env:USERPROFILE\.render\cli.yaml" | Select-String 'key:\s*([^\r\n]+)').Matches.Groups[1].Value.Trim()
+Invoke-RestMethod -Uri "https://api.render.com/v1/services/srv-dbufps0m7kps73c9ddr0/resume" -Method POST -Headers @{ Authorization = "Bearer $token" }
+```
+
+**Option C — Trigger New Build & Deploy:**
+```powershell
+& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" deploys create srv-dbufps0m7kps73c9ddr0 --confirm
+```
+
+---
+
+### 5.2 Online Server STOP (Suspend Service)
+Suspends the cloud instance, spinning down the container and halting compute usage.
+
+**Option A — Via Helper Script:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/render_stop.ps1
+```
+
+**Option B — Direct PowerShell Command:**
+```powershell
+$token = (Get-Content "$env:USERPROFILE\.render\cli.yaml" | Select-String 'key:\s*([^\r\n]+)').Matches.Groups[1].Value.Trim()
+Invoke-RestMethod -Uri "https://api.render.com/v1/services/srv-dbufps0m7kps73c9ddr0/suspend" -Method POST -Headers @{ Authorization = "Bearer $token" }
+```
+
+---
+
+### 5.3 Online Server RESTART
+Gracefully terminates the existing container and boots a clean, fresh instance.
+
+**Option A — Via Helper Script:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/render_restart.ps1
+```
+
+**Option B — Direct CLI Command:**
+```powershell
+& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" restart srv-dbufps0m7kps73c9ddr0 --confirm
+```
+
+---
+
+### 5.4 Online Server STATUS & Live Logs
+
+**Check Server Status:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/render_status.ps1
+```
+
+**Stream Live Container Logs:**
 ```powershell
 & "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" logs --resources srv-dbufps0m7kps73c9ddr0 --tail
 ```
 
-### 5.3 Trigger Manual Deployment
+**Interactive CLI Menu:**
 ```powershell
-& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" deploys create srv-dbufps0m7kps73c9ddr0
+& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" services
 ```
 
-### 5.4 Restart Live Web Service
-```powershell
-& "C:\Users\user0\Documents\cloud_project\render_cli\render.exe" services restart srv-dbufps0m7kps73c9ddr0
-```
+---
+
+### 5.5 Render Web Dashboard (GUI Alternative)
+- **URL:** [https://dashboard.render.com/web/srv-dbufps0m7kps73c9ddr0](https://dashboard.render.com/web/srv-dbufps0m7kps73c9ddr0)
+- **Start:** Click **Resume Service** or **Manual Deploy** &rarr; **Deploy latest commit**
+- **Stop:** Click **Settings** &rarr; scroll to bottom &rarr; **Suspend Service**
+- **Restart:** Click **Manual Deploy** &rarr; **Clear build cache & deploy** or **Restart service**
 
 ---
 
